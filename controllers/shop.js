@@ -9,17 +9,29 @@ exports.getProducts = (req, res, next) => {
   //     path: '/products'
   //   });
   // });
-  Product.fetchAll().then(
-    ([row,fieldData])=>{
+  // Product.fetchAll().then(
+  //   ([row,fieldData])=>{
+  //     res.render('shop/product-list', {
+  //       prods: row,
+  //       pageTitle: 'All Products',
+  //       path: '/products'
+  //     });
+  //   }
+  // ).catch(err =>{
+  //   console.log(err);
+  // })
+
+  Product.findAll().then(
+    products =>{
       res.render('shop/product-list', {
-        prods: row,
+        prods: products,
         pageTitle: 'All Products',
         path: '/products'
       });
     }
-  ).catch(err =>{
+  ).catch(err=>{
     console.log(err);
-  })
+  });
 };
 
 exports.getProduct = (req, res, next) => {
@@ -32,18 +44,15 @@ exports.getProduct = (req, res, next) => {
   //   });
   // });
   const prodId = req.params.productId;
-  Product.findById(prodId).then(
-    ([product]) =>{
+  Product.findByPk(prodId)
+    .then(product => {
       res.render('shop/product-detail', {
-        product: product[0],
+        product: product,
         pageTitle: product.title,
         path: '/products'
       });
-    }
-  ).catch(err=>{console.log(err);})
-  
-    
-
+    })
+    .catch(err => console.log(err));
 };
 
 exports.getIndex = (req, res, next) => {
@@ -54,15 +63,28 @@ exports.getIndex = (req, res, next) => {
     //   path: '/'
     // });
   // });
-  Product.fetchAll().then(
-    ([row, fieldData])=>{
+ //####################### using sql queries####################
+  // Product.fetchAll().then(
+  //   ([row, fieldData])=>{
+      // res.render('shop/index', {
+      //   prods: row,
+      //   pageTitle: 'Shop',
+      //   path: '/'
+      // });
+  //   }
+  // ).catch(err=>{console.log(err)});
+  //##################### using sequelize ########################
+  Product.findAll().then(
+    products =>{
       res.render('shop/index', {
-        prods: row,
+        prods: products,
         pageTitle: 'Shop',
         path: '/'
       });
     }
-  ).catch(err=>{console.log(err)});
+  ).catch(err=>{
+    console.log(err);
+  });
 };
 
 exports.getCart = (req, res, next) => {
